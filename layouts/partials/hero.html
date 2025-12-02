@@ -1,4 +1,4 @@
-{{/* layouts/partials/hero.html - High Conversion Block (Final, Defensive Version) */}}
+{{/* layouts/partials/hero.html - High Conversion Block (Ultra-Defensive Version) */}}
 {{ $ctx := .ctx }}
 {{ $hero := .data }}
 {{ $skin := .skin }}
@@ -27,15 +27,21 @@
       </div>
     </div>
 
-    {{/* كود معالجة الصورة الآمن */}}
+    {{/* كود معالجة الصورة الآمن (نقطة الانهيار السابقة) */}}
     {{ $assetPath := printf "images/%s/%s" $skin $bg }}
     {{ $img := resources.Get $assetPath }}
 
+    {{/* نستخدم "with" لضمان عدم حدوث خطأ إذا لم يجد Hugo الملف. */}}
     {{ with $img }}
-      {{ $resized := .Fit "800x600 webp" | images.Quality 85 }}
+      {{/* محاولة المعالجة: إذا فشلت، سيظل $resized فارغاً */}}
+      {{ $resized := .Fit "800x600 webp" | images.Quality 85 | default . }} 
       <div aria-hidden="true">
-        <img src="{{ $resized.RelPermalink }}" alt="{{ $alt }}" style="width:100%; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,.15);" loading="eager">
+        {{/* نستخدم "with" مرة أخرى للعرض لضمان أن $resized ليس فارغاً */}}
+        {{ with $resized }}
+            <img src="{{ .RelPermalink }}" alt="{{ $alt }}" style="width:100%; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,.15);" loading="eager">
+        {{ end }}
       </div>
-    {{ end }}
+    {{ else }}
+        {{ end }}
   </div>
 </section>
