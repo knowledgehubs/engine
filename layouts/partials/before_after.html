@@ -1,0 +1,41 @@
+{{/* layouts/partials/before_after.html - For Dentist Skin */}}
+{{ $ctx := .ctx }}
+{{ $data := .data }}
+{{ $skin := .skin }}
+
+{{ if and (isset $data "pairs") (gt (len $data.pairs) 0) }}
+<section class="container" aria-labelledby="before-after-heading" style="padding:2rem 0; background:#f5f5f5; border-radius:12px; margin-bottom:2rem;">
+  {{ if $data.title }}<h2 id="before-after-heading" style="text-align:center;">{{ $data.title }}</h2>{{ end }}
+  {{ if $data.excerpt }}<p style="text-align:center; margin-bottom:1.5rem;">{{ $data.excerpt }}</p>{{ end }}
+
+  <div class="grid" role="list">
+    {{ range $pair := $data.pairs }}
+      <figure role="listitem" style="background:#fff;padding:1rem;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.05);">
+        <figcaption style="text-align:center; font-style:italic; margin-bottom:0.75rem;">{{ default "Patient Result" $pair.caption }}</figcaption>
+        <div style="display:flex; gap:0.5rem;">
+          {{ $assetPathBefore := printf "images/%s/%s" $skin $pair.before }}
+          {{ $assetPathAfter := printf "images/%s/%s" $skin $pair.after }}
+
+          {{/* Image Before */}}
+          {{ with resources.Get $assetPathBefore }}
+            {{ $thumbBefore := .Fit "400x400 webp" | images.Quality 85 }}
+            <div style="flex:1; text-align:center;">
+                <img src="{{ $thumbBefore.RelPermalink }}" alt="Before {{ $pair.caption }}" style="width:100%; height:auto; border-radius:8px;" loading="lazy">
+                <small style="font-weight:bold; color:#f00;">BEFORE</small>
+            </div>
+          {{ end }}
+
+          {{/* Image After */}}
+          {{ with resources.Get $assetPathAfter }}
+            {{ $thumbAfter := .Fit "400x400 webp" | images.Quality 85 }}
+            <div style="flex:1; text-align:center;">
+                <img src="{{ $thumbAfter.RelPermalink }}" alt="After {{ $pair.caption }}" style="width:100%; height:auto; border-radius:8px;" loading="lazy">
+                <small style="font-weight:bold; color:var(--brand);">AFTER</small>
+            </div>
+          {{ end }}
+        </div>
+      </figure>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
