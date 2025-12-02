@@ -1,1 +1,42 @@
+{{/* layouts/partials/hero.html */}}
+{{ $ctx := .ctx }}
+{{ $hero := .data }}
+{{ $skin := .skin }}
+
+{{ $heading := default "Welcome" $hero.heading }}
+{{ $sub := default "" $hero.subheading }}
+{{ $cta_text := default "Contact Us" $hero.cta_text }}
+{{ $cta_link := default "#" $hero.cta_link }}
+{{ $bg := default "hero-bg.jpg" $hero.background }}
+
+<section aria-labelledby="hero-heading" class="hero-section" style="padding:2rem 0;">
+  <div class="container" style="display:grid;grid-template-columns:1fr;gap:1rem;align-items:center;">
+    <div style="position:relative;">
+      <h1 id="hero-heading">{{ $heading }}</h1>
+      {{ if $sub }}<p>{{ $sub }}</p>{{ end }}
+
+      <div style="margin-top:1rem;">
+        <a class="btn" href="{{ $cta_link }}">{{ $cta_text }}</a>
+        {{ with $hero.phone }}
+          {{ if ne . "" }}<a class="btn" href="tel:{{ . }}" style="margin-left:0.5rem;background:transparent;color:var(--brand);border:1px solid var(--brand);">Call Us</a>{{ end }}
+        {{ end }}
+      </div>
+    </div>
+
+    {{/* Background image column — only render if file exists in assets */}}
+    {{ $assetPath := printf "images/%s/%s" $skin $bg }}
+    {{ with resources.Get $assetPath }}
+      {{/* Resize & smart crop: for hero, we prefer a wide crop */}}
+      {{ $resized := .Fit "1400x800" | images.Quality 85 }}
+      <div aria-hidden="true" style="margin-top:1rem;">
+        <picture>
+          <source srcset="{{ $resized.RelPermalink }}" />
+          <img src="{{ $resized.RelPermalink }}" alt="{{ default (printf "%s hero image" $skin) $hero.alt }}" style="width:100%;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.12);" loading="lazy">
+        </picture>
+      </div>
+    {{ else }}
+      {{/* Do not output empty image tags — the hero will simply be text only */}}
+    {{ end }}
+  </div>
+</section>
 
