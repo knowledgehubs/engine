@@ -1,39 +1,70 @@
-{{/* layouts/index.html - Diagnostic Version */}}
+{{/* layouts/index.html - Master Controller (Final, Corrected Version) */}}
 
-{{ $skin := default "dentist" .Site.Params.skin }}
-{{ $data := index .Site.Data $skin }}
+  {{/* 1. قراءة البيانات بشكل دفاعي */}}
+  {{ $skin := default "dentist" .Site.Params.skin }}
+  {{ $data := index .Site.Data $skin }}
+  {{ $meta := cond (isset $data "meta") $data.meta dict }}  
+  {{/* يتم تعريف $meta هنا لتمريره بأمان إلى الـ partials */}}
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>DIAGNOSTIC TEST</title>
-  </head>
-  <body>
-    
-    <div style="padding: 30px; font-family: sans-serif;">
-      <h1>DIAGNOSTIC RESULTS:</h1>
+
+  {{ if not $data }}
+    {{/* رسالة خطأ واضحة إذا كانت البيانات مفقودة */}}
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>Data Error</title>
+      </head>
+      <body>
+        <main style="padding: 2rem; text-align: center; font-family: sans-serif;">
+          <h1>Error: Skin '{{ $skin }}' data not found.</h1>
+          <p>Please check: <code>data/{{ $skin }}/sections.toml</code></p>
+          <p>Also confirm <code>skin = "{{ $skin }}"</code> is set in <code>config.toml</code>.</p>
+        </main>
+      </body>
+    </html>
+
+  {{ else }}
+    {{/* 2. بناء الصفحة إذا تم تحميل البيانات بنجاح */}}
+    <!doctype html>
+    <html lang="en">
+    {{ partial "head.html" . }} 
+    <body>
       
-      {{ if not $data }}
-        <p style="color: red; font-size: 1.2rem;">❌ ERROR: Data for skin '{{ $skin }}' was NOT loaded!</p>
-        <p>Please check: <code>data/{{ $skin }}/sections.toml</code></p>
-      {{ else }}
-        <p style="color: green; font-size: 1.2rem;">✅ SUCCESS: Data loaded from skin: <strong>{{ $skin }}</strong></p>
-        <p><strong>Brand Name Read:</strong> {{ default "Error Reading Brand" $data.meta.brand }}</p>
-        
-        <hr style="margin-top:20px;">
-        
-        {{ partial "head.html" . }} 
-
-        <p style="margin-top: 20px;">If this page is still BLANK, the error is inside <code>partials/head.html</code> or <code>partials/hero.html</code>.</p>
-
-        {{ if and (isset $data "hero") (index $data "hero").enable }}
-           <h2>Hero Section Test</h2>
-           {{ partial "hero.html" (dict "ctx" . "data" $data.hero "skin" $skin "meta" $data.meta) }}
-        {{ end }}
-
+      {{/* 1. HERO */}}
+      {{ if and (isset $data "hero") (index $data "hero").enable }}
+        {{ partial "hero.html" (dict "ctx" . "data" $data.hero "skin" $skin "meta" $data.meta) }}
       {{ end }}
-    </div>
 
-  </body>
-</html>
+      {{/* 2. FEATURES */}}
+      {{ if and (isset $data "features") (index $data "features").enable }}
+        {{ partial "features.html" (dict "ctx" . "data" $data.features "skin" $skin) }}
+      {{ end }}
+
+      {{/* 3. Specialized Sections */}}
+      {{ if and (isset $data "before_after") (index $data "before_after").enable }}
+        {{ partial "before_after.html" (dict "ctx" . "data" $data.before_after "skin" $skin) }}
+      {{ end }}
+
+      {{ if and (isset $data "case_results") (index $data "case_results").enable }}
+        {{ partial "case_results.html" (dict "ctx" . "data" $data.case_results "skin" $skin) }}
+      {{ end }}
+
+      {{/* 4. TESTIMONIALS */}}
+      {{ if and (isset $data "testimonials") (index $data "testimonials").enable }}
+        {{ partial "testimonials.html" (dict "ctx" . "data" $data.testimonials "skin" $skin) }}
+      {{ end }}
+
+      {{/* 5. CTA */}}
+      {{ if and (isset $data "cta") (index $data "cta").enable }}
+        {{ partial "cta.html" (dict "ctx" . "data" $data.cta "skin" $skin "meta" $data.meta) }}
+      {{ end }}
+
+      {{/* 6. CONTACT */}}
+      {{ if and (isset $data "contact") (index $data "contact").enable }}
+        {{ partial "contact.html" (dict "ctx" . "data" $data.contact "skin" $skin) }}
+      {{ end }}
+
+    </body>
+    </html>
+  {{ end }}
