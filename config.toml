@@ -1,3 +1,11 @@
-[params]
-skin = "dentist" # default; swap to "realestate" per deployment or override per environment
+baseURL = "https://knowledgehubs.github.io/engine/"
+languageCode = "en-us"
+title = "Landing Page Engine"
+canonifyURLs = true
 
+[params]
+  # 🕹️ لوحة تحكم تغيير الـ Skin
+  skin = "dentist" # الخيار الافتراضي: إما "dentist" أو "realestate"
+
+[server]
+  disableFastRender = true
