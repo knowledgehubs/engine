@@ -1,1 +1,43 @@
+{{/* layouts/partials/cta.html */}}
+{{ $ctx := .ctx }}
+{{ $cta := .data }}
+{{ $skin := .skin }}
+{{ $meta := .meta }}
+
+<section class="container" style="padding:2rem 0;">
+  {{ if $cta.title }}<h2>{{ $cta.title }}</h2>{{ end }}
+  {{ if $cta.text }}<p>{{ $cta.text }}</p>{{ end }}
+  {{ if $cta.button }}<a class="btn" href="{{ default "#" $cta.link }}">{{ $cta.button }}</a>{{ end }}
+</section>
+
+{{/* Floating WhatsApp button using meta.whatsapp */}}
+{{ with $meta.whatsapp }}
+  {{ $wh := . }}
+  {{ if ne $wh "" }}
+    {{/* sanitize: remove spaces */}}
+    {{ $clean := replace $wh " " "" -1 }}
+    <a aria-label="WhatsApp" href="https://wa.me/{{ $clean | urlize }}" target="_blank" rel="noopener" style="
+      position:fixed;
+      right:1rem;
+      bottom:1rem;
+      width:56px;
+      height:56px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      background:var(--brand);
+      color:#fff;
+      text-decoration:none;
+      box-shadow:0 8px 24px rgba(0,0,0,.16);
+      z-index:1000;
+    ">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.5 3.5L3.5 20.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- simple placeholder icon; replace with official whatsapp svg if desired -->
+        <circle cx="12" cy="12" r="10" stroke="white" stroke-width="0" fill="white" fill-opacity="0"/>
+      </svg>
+    </a>
+  {{ end }}
+{{ end }}
 
