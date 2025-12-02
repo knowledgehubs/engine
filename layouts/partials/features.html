@@ -1,1 +1,29 @@
+{{/* layouts/partials/features.html */}}
+{{ $ctx := .ctx }}
+{{ $features := .data }}
+{{ $skin := .skin }}
+
+<section class="container" aria-labelledby="features-heading" style="padding:2rem 0;">
+  {{ if $features.title }}<h2 id="features-heading">{{ $features.title }}</h2>{{ end }}
+  {{ if $features.excerpt }}<p>{{ $features.excerpt }}</p>{{ end }}
+
+  {{ if and (isset $features "items") (gt (len $features.items) 0) }}
+    <div class="grid" role="list">
+      {{ range $i, $it := $features.items }}
+        <article role="listitem" style="background:#fff;padding:1rem;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.04);">
+          {{ with $it.image }}
+            {{ $assetPath := printf "images/%s/%s" $skin . }}
+            {{ with resources.Get $assetPath }}
+              {{ $thumb := .Fit "600x400" | images.Quality 80 }}
+              <img src="{{ $thumb.RelPermalink }}" alt="{{ $it.title | default "feature image" }}" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:0.75rem;" loading="lazy">
+            {{ end }}
+          {{ end }}
+
+          {{ if $it.title }}<h3>{{ $it.title }}</h3>{{ end }}
+          {{ if $it.desc }}<p>{{ $it.desc }}</p>{{ end }}
+        </article>
+      {{ end }}
+    </div>
+  {{ end }}
+</section>
 
