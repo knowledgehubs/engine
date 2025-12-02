@@ -1,4 +1,4 @@
-{{/* layouts/partials/hero.html - High Conversion Block */}}
+{{/* layouts/partials/hero.html - High Conversion Block (Final, Defensive Version) */}}
 {{ $ctx := .ctx }}
 {{ $hero := .data }}
 {{ $skin := .skin }}
@@ -27,21 +27,15 @@
       </div>
     </div>
 
-    {{/* كود معالجة الصورة (نقطة الانهيار المحتملة) */}}
+    {{/* كود معالجة الصورة الآمن */}}
     {{ $assetPath := printf "images/%s/%s" $skin $bg }}
-    
-    {{/* 1. البحث عن الملف داخل Assets */}}
     {{ $img := resources.Get $assetPath }}
 
-    {{/* 2. إذا وجدنا الملف، قم بمعالجته وعرضه */}}
     {{ with $img }}
-      {{/* Resize & smart crop: we trust that the image processing is correct */}}
       {{ $resized := .Fit "800x600 webp" | images.Quality 85 }}
       <div aria-hidden="true">
         <img src="{{ $resized.RelPermalink }}" alt="{{ $alt }}" style="width:100%; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,.15);" loading="eager">
       </div>
-    {{ else }}
-      {{/* إذا لم يتم العثور على الملف، لا تقم بعرض أي شيء لتجنب الخطأ */}}
     {{ end }}
   </div>
 </section>
