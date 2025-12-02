@@ -1,35 +1,42 @@
-{{/* layouts/partials/head.html - Highly Defensive Version */}}
+{{/* layouts/partials/head.html - ULTIMATE DEFENSE VERSION */}}
 {{ $skin := default "dentist" .Site.Params.skin }}
 {{ $data := index .Site.Data $skin }}
-{{ $meta := cond (isset $data "meta") $data.meta dict }}
+
+{{/* تعيين قيم افتراضية آمنة */}}
+{{ $brand := "Landing Page Engine" }}
+{{ $color := "#1e88e5" }}
+{{ $font := "Cairo" }}
+
+{{/* التحقق من وجود البيانات واستبدال القيم الافتراضية */}}
+{{ if and (isset $data "meta") $data.meta }}
+    {{ $brand = default $brand $data.meta.brand }}
+    {{ $color = default $color $data.meta.primary_color }}
+    {{ $font = default $font $data.meta.font }}
+{{ end }}
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   
-  {{/* حماية عنوان الصفحة من التوقف إذا كانت البيانات مفقودة */}}
-  {{ $pageTitle := printf "%s | %s" (default "Brand Unknown" $meta.brand) (.Title | default "Home") }}
-  <title>{{ $pageTitle }}</title>
+  <title>{{ $brand }} | {{ .Title | default "Home" }}</title>
 
-  {{/* CSS variables for theming: font-family, primary color */}}
   <style>
     :root{
-      /* استخدام default للحماية من القيم الفارغة */
-      --brand: {{ default "#1e88e5" $meta.primary_color }};
-      --font-family: {{ default "Cairo" $meta.font }};
-      --brand-font: var(--font-family);
+      /* استخدام القيم المعرفة والمحصنة */
+      --brand: {{ $color }};
+      --font-family: {{ $font }};
     }
 
-    /* Styles */
-    html,body{ font-family: var(--brand-font), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; padding:0; line-height:1.6; color:#333; }
-    h1,h2,h3{ color:var(--brand); margin-bottom:0.75rem; }
+    /* Minimal Safe Styles to see text */
+    html,body{ font-family: var(--font-family), sans-serif; margin:0; padding:0; line-height:1.6; color:#333; }
     .container{ max-width:1100px; margin:0 auto; padding:1rem; }
-    .btn{ display:inline-block; padding:0.75rem 1rem; border-radius:8px; background:var(--brand); color:#fff; text-decoration:none; font-weight:600; transition:background 0.2s; }
+    h1,h2,h3{ color:var(--brand); margin-bottom:0.75rem; }
+    .btn{ background:var(--brand); color:#fff; padding:0.75rem 1rem; border-radius:8px; text-decoration:none; display:inline-block; }
     .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
   </style>
 
-  {{/* استدعاء الخطوط - نستخدم lower لتجنب أخطاء حالة الأحرف */}}
-  {{ $fontName := lower ($meta.font | default "cairo") }}
+  {{/* استدعاء الخطوط */}}
+  {{ $fontName := lower $font }}
   {{ if eq $fontName "cairo" }}
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
   {{ else if eq $fontName "tajawal" }}
