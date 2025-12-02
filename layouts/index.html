@@ -1,29 +1,33 @@
-{{/* layouts/index.html */}}
-{{ define "main" }}
+{{/* layouts/index.html - Master Controller (Corrected for Blank Page Error) */}}
+
+  {{/* قراءة السكين من الإعدادات */}}
   {{ $skin := default "dentist" .Site.Params.skin }}
   {{ $data := index .Site.Data $skin }}
 
-  {{/* defensive: if no data, show a helpful message */}}
   {{ if not $data }}
-    <main class="container">
-      <h1>No skin data found</h1>
-      <p>Create <code>data/{{ $skin }}/sections.toml</code> to control sections.</p>
+    <main style="padding: 2rem; text-align: center; font-family: sans-serif;">
+      <h1>Error: Skin '{{ $skin }}' data not found.</h1>
+      <p>Check if <code>data/{{ $skin }}/sections.toml</code> exists and is correctly structured.</p>
     </main>
   {{ else }}
-    {{ partial "head.html" . }}
-
+    <!doctype html>
+    <html lang="en">
+    {{ partial "head.html" . }} 
     <body>
-      {{/* Order matters for conversion: hero -> features -> before/after/case results -> testimonials -> cta -> contact */}}
-
+      
+      {{/* الأقسام مرتبة حسب أهمية التحويل (CRO) */}}
+      
+      {{/* 1. HERO - يجب أن يكون موجوداً دائماً */}}
       {{ if and (isset $data "hero") (index $data "hero").enable }}
-        {{ partial "hero.html" (dict "ctx" . "data" $data.hero "skin" $skin) }}
+        {{ partial "hero.html" (dict "ctx" . "data" $data.hero "skin" $skin "meta" $data.meta) }}
       {{ end }}
 
+      {{/* 2. FEATURES - الخدمات/المميزات */}}
       {{ if and (isset $data "features") (index $data "features").enable }}
         {{ partial "features.html" (dict "ctx" . "data" $data.features "skin" $skin) }}
       {{ end }}
 
-      {{/* Dentist before_after, Realestate case_results — include generically but each partial will check */}}
+      {{/* 3. Specialized Sections (Before/After OR Case Results) */}}
       {{ if and (isset $data "before_after") (index $data "before_after").enable }}
         {{ partial "before_after.html" (dict "ctx" . "data" $data.before_after "skin" $skin) }}
       {{ end }}
@@ -32,18 +36,21 @@
         {{ partial "case_results.html" (dict "ctx" . "data" $data.case_results "skin" $skin) }}
       {{ end }}
 
+      {{/* 4. TESTIMONIALS - الشهادات (لزيادة الثقة) */}}
       {{ if and (isset $data "testimonials") (index $data "testimonials").enable }}
         {{ partial "testimonials.html" (dict "ctx" . "data" $data.testimonials "skin" $skin) }}
       {{ end }}
 
+      {{/* 5. CTA - زر الحث على اتخاذ إجراء (الرئيسي) */}}
       {{ if and (isset $data "cta") (index $data "cta").enable }}
         {{ partial "cta.html" (dict "ctx" . "data" $data.cta "skin" $skin "meta" $data.meta) }}
       {{ end }}
 
+      {{/* 6. CONTACT - معلومات الاتصال */}}
       {{ if and (isset $data "contact") (index $data "contact").enable }}
         {{ partial "contact.html" (dict "ctx" . "data" $data.contact "skin" $skin) }}
       {{ end }}
-    </body>
-  {{ end }}
-{{ end }}
 
+    </body>
+    </html>
+  {{ end }}
