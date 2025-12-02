@@ -55,6 +55,7 @@ jobs:
         with:
           path: ./public
 
+
   # مهمة النشر
   deploy:
     environment:
