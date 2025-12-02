@@ -1,1 +1,29 @@
+{{/* layouts/partials/testimonials.html - With Schema Markup */}}
+{{ $ctx := .ctx }}
+{{ $data := .data }}
+{{ $skin := .skin }}
 
+{{ if and (isset $data "items") (gt (len $data.items) 0) }}
+<section class="container" aria-labelledby="testimonials-heading" style="padding:2rem 0;">
+  {{ if $data.title }}<h2 id="testimonials-heading" style="text-align:center;">{{ $data.title }}</h2>{{ end }}
+
+  <div class="grid" role="list">
+    {{ range $review := $data.items }}
+      {{/* Use schema.org for improved SEO credibility */}}
+      <blockquote role="listitem" itemscope itemtype="http://schema.org/Review" style="background:#fff;padding:1.5rem;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.04);border-top:5px solid var(--brand);">
+        <meta itemprop="itemReviewed" content="{{ $skin }} service">
+        <div itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+          <meta itemprop="ratingValue" content="5">
+          <meta itemprop="bestRating" content="5">
+        </div>
+
+        <p itemprop="reviewBody" style="font-style:italic; margin-bottom:1rem; min-height:80px;">"{{ $review.text }}"</p>
+        
+        <footer>
+          <p itemprop="author" style="font-weight:bold; color:var(--brand);">- {{ $review.name }}</p>
+        </footer>
+      </blockquote>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
