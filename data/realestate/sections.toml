@@ -1,1 +1,64 @@
+# Realestate skin: sections.toml
+[meta]
+skin = "realestate"
+brand = "Skyline Realty"
+primary_color = "#0b6b4f"
+font = "Cairo" # corporate preference
+whatsapp = "+201112223334"
+
+[hero]
+enable = true
+heading = "Find Your Next Home Fast"
+subheading = "Top listings, expert agents, and flexible financing."
+background = "hero-bg.jpg"
+cta_text = "Search Listings"
+cta_link = "/listings"
+
+[features]
+enable = true
+title = "Why List With Skyline"
+excerpt = "We sell faster, for more."
+[[features.items]]
+title = "High-Quality Listings"
+desc = "Professional photos and virtual tours."
+image = "feature-1.jpg"
+
+[[features.items]]
+title = "Top Agents"
+desc = "Local experts who negotiate great deals."
+image = "feature-2.jpg"
+
+[[features.items]]
+title = "Free Valuation"
+desc = "Instant property appraisal with market data."
+image = "feature-3.jpg"
+
+[case_results]
+enable = true
+title = "Recent Sales"
+excerpt = "Examples of properties we've sold above asking price."
+[[case_results.items]]
+title = "Zamalek Penthouse"
+price = "5,400,000 EGP"
+image = "listing-1.jpg"
+result = "Sold 12% above asking"
+
+[testimonials]
+enable = true
+title = "People Love Us"
+[[testimonials.items]]
+name = "Omar"
+text = "They sold my apartment in 9 days — unbelievable!"
+
+[cta]
+enable = true
+title = "Want To Sell Faster?"
+text = "Get a free valuation within 24 hours."
+button = "Get Valuation"
+
+[contact]
+enable = true
+address = "10 Corniche Rd, Giza"
+phone = "+201112223334"
+email = "sales@skyline.example"
 
