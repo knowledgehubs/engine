@@ -1,29 +1,34 @@
-{{/* layouts/partials/features.html */}}
-{{ $ctx := .ctx }}
+{{/* layouts/partials/features.html - Ultra-Defensive Version */}}
 {{ $features := .data }}
 {{ $skin := .skin }}
 
-<section class="container" aria-labelledby="features-heading" style="padding:2rem 0;">
-  {{ if $features.title }}<h2 id="features-heading">{{ $features.title }}</h2>{{ end }}
-  {{ if $features.excerpt }}<p>{{ $features.excerpt }}</p>{{ end }}
+{{ if and (isset $features "items") (gt (len $features.items) 0) }}
+<section class="container" aria-labelledby="features-heading" style="padding:4rem 0;">
+  {{ with $features.title }}<h2 id="features-heading" style="text-align:center;">{{ . }}</h2>{{ end }}
+  {{ with $features.excerpt }}<p style="text-align:center; color:#777;">{{ . }}</p>{{ end }}
 
-  {{ if and (isset $features "items") (gt (len $features.items) 0) }}
-    <div class="grid" role="list">
-      {{ range $i, $it := $features.items }}
-        <article role="listitem" style="background:#fff;padding:1rem;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.04);">
-          {{ with $it.image }}
-            {{ $assetPath := printf "images/%s/%s" $skin . }}
-            {{ with resources.Get $assetPath }}
-              {{ $thumb := .Fit "600x400" | images.Quality 80 }}
-              <img src="{{ $thumb.RelPermalink }}" alt="{{ $it.title | default "feature image" }}" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:0.75rem;" loading="lazy">
+  <div class="grid" role="list" style="margin-top:2rem;">
+    {{ range $i, $it := $features.items }}
+      <article role="listitem" style="background:#fff;padding:1.5rem;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.04); text-align:center;">
+        
+        {{/* Critical: Defensive image processing inside loop */}}
+        {{ with $it.image }}
+          {{ $assetPath := printf "images/%s/%s" $skin . }}
+          {{ $img := resources.Get $assetPath }}
+          
+          {{ with $img }}
+            {{/* معالجة الصورة، استخدام default . لضمان قيمة غير فارغة */}}
+            {{ $thumb := .Fit "300x200 webp" | images.Quality 80 | default . }}
+            {{ with $thumb }}
+                <img src="{{ .RelPermalink }}" alt="{{ $it.title | default "feature image" }}" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:1rem;" loading="lazy">
             {{ end }}
           {{ end }}
+        {{ end }}
 
-          {{ if $it.title }}<h3>{{ $it.title }}</h3>{{ end }}
-          {{ if $it.desc }}<p>{{ $it.desc }}</p>{{ end }}
-        </article>
-      {{ end }}
-    </div>
-  {{ end }}
+        {{ with $it.title }}<h3 style="font-size:1.1rem; margin-bottom:0.5rem;">{{ . }}</h3>{{ end }}
+        {{ with $it.desc }}<p style="font-size:0.95rem; color:#777;">{{ . }}</p>{{ end }}
+      </article>
+    {{ end }}
+  </div>
 </section>
-
+{{ end }}
