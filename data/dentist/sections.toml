@@ -1,1 +1,67 @@
+# Dentist skin: sections.toml
+[meta]
+skin = "dentist"
+brand = "BrightSmile Dental"
+primary_color = "#1e88e5"
+font = "Tajawal" # medical preference
+whatsapp = "+201234567890"
+
+[hero]
+enable = true
+heading = "Get Your Confident Smile Back"
+subheading = "Pain-free teeth whitening & veneers — same-week appointments."
+background = "hero-bg.jpg"
+cta_text = "Book Free Consult"
+cta_link = "/contact"
+# CTA secondary can be phone
+phone = "+201234567890"
+
+[features]
+enable = true
+title = "Our Dental Services"
+excerpt = "Cosmetic, restorative and preventative care with flexible financing."
+# grid items
+[[features.items]]
+title = "Teeth Whitening"
+desc = "Safe, in-office whitening with immediate results."
+image = "feature-1.jpg"
+
+[[features.items]]
+title = "Veneers & Bonding"
+desc = "Smile transformations in 1–2 visits."
+image = "feature-2.jpg"
+
+[[features.items]]
+title = "Emergency Care"
+desc = "Same-day appointments for urgent dental pain."
+image = "feature-3.jpg"
+
+[before_after]
+enable = true
+title = "Before & After"
+excerpt = "Real patient transformations."
+# each pair
+[[before_after.pairs]]
+before = "before1.jpg"
+after = "after1.jpg"
+caption = "Veneer + Whitening"
+
+[testimonials]
+enable = true
+title = "Happy Patients"
+[[testimonials.items]]
+name = "Amira"
+text = "Life-changing results — zero pain and so fast!"
+
+[cta]
+enable = true
+title = "Ready for a Brighter Smile?"
+text = "Book a free consult. Walk-ins welcome."
+button = "Book Now"
+
+[contact]
+enable = true
+address = "123 Nile St, Cairo"
+phone = "+201234567890"
+email = "hello@brightsmile.example"
 
