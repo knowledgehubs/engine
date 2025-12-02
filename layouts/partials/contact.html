@@ -1,1 +1,30 @@
+{{/* layouts/partials/contact.html - Displays Contact Info */}}
+{{ $ctx := .ctx }}
+{{ $contact := .data }}
 
+<section class="container" style="padding:2rem 0; text-align:center; border-top:1px solid #eee;">
+    <h2 style="margin-bottom:1rem;">Contact Us</h2>
+    
+    <div style="display:flex; justify-content:center; gap:2rem;">
+        {{ with $contact.address }}
+            <div>
+                <strong>📍 Address:</strong>
+                <p>{{ . }}</p>
+            </div>
+        {{ end }}
+        
+        {{ with $contact.phone }}
+            <div>
+                <strong>📞 Phone:</strong>
+                <p><a href="tel:{{ . }}" style="color:var(--brand);">{{ . }}</a></p>
+            </div>
+        {{ end }}
+
+        {{ with $contact.email }}
+            <div>
+                <strong>📧 Email:</strong>
+                <p><a href="mailto:{{ . }}" style="color:var(--brand);">{{ . }}</a></p>
+            </div>
+        {{ end }}
+    </div>
+</section>
