@@ -7,7 +7,7 @@ on:
     branches:
       - main  # 👈 عند رفع أي تعديل على الفرع الرئيسي
 
-  # يسمح بتشغيل الـ Workflow يدوياً من تبويب Actions
+  # يسمح بتشغيل الـ Workflow يدوياً
   workflow_dispatch:
 
 # إعداد الأذونات (Permissions)
@@ -16,10 +16,10 @@ permissions:
   pages: write
   id-token: write
 
-# تحديد بيئة النشر (تستخدمها GitHub Pages)
-environment:
-  name: github-pages
-  url: ${{ steps.deployment.outputs.page_url }}
+# إعدادات البناء المتزامن
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   # مهمة البناء
@@ -29,8 +29,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: true  # في حال استخدمت قوالب فرعية
-          fetch-depth: 0    # مطلوب لأدوات Git
+          submodules: true
+          fetch-depth: 0
 
       - name: Setup Pages
         id: pages
@@ -39,12 +39,12 @@ jobs:
       - name: Setup Hugo (Extended)
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: 'latest' # استخدام أحدث إصدار
-          extended: true         # ⚠️ يجب أن تكون true لمعالجة الصور والـ SCSS
+          hugo-version: 'latest'
+          extended: true
 
       - name: Build Hugo site
         run: |
-          # أمر البناء الرئيسي (استخدام baseURL من الـ Workflow)
+          # نستخدم base_url من GitHub Actions لضمان عمل الروابط على GitHub Pages
           hugo \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}" \
@@ -55,9 +55,9 @@ jobs:
         with:
           path: ./public
 
-
   # مهمة النشر
   deploy:
+    # ⚠️ هنا يتم تعريف البيئة (GitHub Pages) داخل الـ Job مباشرة
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
